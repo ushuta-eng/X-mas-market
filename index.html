@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ja">
 <head>
@@ -15,7 +16,7 @@ label{display:block;font-weight:700;font-size:14px;margin:20px 0 8px}
 .required{color:#d33;font-size:11px;margin-left:5px}
 input,select{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;font-size:16px;background:#fff}
 .days{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.day{border:1px solid #ccc;border-radius:10px;padding:12px;cursor:pointer}
+.day{border:1px solid #ccc;border-radius:10px;padding:12px;margin:0;font-weight:400;cursor:pointer}
 .day input{width:auto;margin-right:8px}
 .day small{display:block;color:#777;margin:5px 0 0 24px}
 .notice{background:#f7f7f7;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:#555}
@@ -23,16 +24,16 @@ input,select{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;fo
 .consent{display:flex;gap:8px;align-items:flex-start;font-weight:400}
 .consent input{width:auto;margin-top:4px}
 button{width:100%;border:0;border-radius:12px;background:#222;color:#fff;padding:15px;font-size:16px;font-weight:700;margin-top:22px;cursor:pointer}
-.success{display:none;text-align:center}
-.success h2{font-size:24px}
+button:disabled{opacity:.55;cursor:wait}
+.status{font-size:14px;line-height:1.7;margin-top:16px;white-space:pre-line}
+.success{text-align:center}
 .line{display:block;background:#06c755;color:#fff;text-decoration:none;padding:15px;border-radius:12px;font-weight:700;margin-top:18px}
 .caption{font-size:11px;color:#777;margin-top:8px}
+[hidden]{display:none!important}
 </style>
 </head>
-
 <body>
 <div class="container">
-
 <div class="card" id="formCard">
 <h1>参加申込フォーム</h1>
 <p class="lead">必要事項をご入力のうえ、お申し込みください。先着順で受付します。</p>
@@ -43,106 +44,236 @@ button{width:100%;border:0;border-radius:12px;background:#222;color:#fff;padding
 </div>
 
 <form id="form">
+<label for="name">名前<span class="required">必須</span></label>
+<input required id="name" name="name" placeholder="例：山田 太郎">
 
-<label>名前<span class="required">必須</span></label>
-<input required name="name" placeholder="例：山田 太郎">
-
-<label>学年<span class="required">必須</span></label>
-<select required name="grade">
+<label for="grade">学年<span class="required">必須</span></label>
+<select required id="grade" name="grade">
 <option value="">選択してください</option>
-<option>高校1年</option>
-<option>高校2年</option>
-<option>高校3年</option>
-<option>大学1年</option>
-<option>大学2年</option>
-<option>大学3年</option>
-<option>大学4年</option>
-<option>大学院1年</option>
-<option>大学院2年</option>
-<option>大学院3年</option>
+<option>高校1年</option><option>高校2年</option><option>高校3年</option>
+<option>大学1年</option><option>大学2年</option><option>大学3年</option>
+<option>大学4年</option><option>大学院1年</option><option>大学院2年</option><option>大学院3年</option>
 </select>
 
-<label>メールアドレス<span class="required">必須</span></label>
-<input required type="email" name="email" placeholder="example@example.com">
+<label for="email">メールアドレス<span class="required">必須</span></label>
+<input required type="email" id="email" name="email" placeholder="example@example.com">
 
-<label>緊急連絡先<span class="required">必須</span></label>
-<input required type="tel" name="emergency" placeholder="090-0000-0000">
+<label for="emergency">緊急連絡先<span class="required">必須</span></label>
+<input required type="tel" id="emergency" name="emergency" placeholder="090-0000-0000">
 
 <label>参加希望日<span class="required">必須・複数選択可</span></label>
-<div class="days" id="days"></div>
+<div class="days" id="days">日程を読み込んでいます…</div>
 
 <label>個人情報の取り扱い</label>
-
 <div class="policy">
 収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、個人データを第三者に提供しません。<br><br>
 取得した情報は、本イベントの受付・連絡・緊急時対応および運営に必要な範囲で利用します。
 </div>
 
 <label class="consent">
-<input type="checkbox" required>
+<input type="checkbox" id="consent" required>
 <span>個人情報の取り扱いに同意します。</span>
 </label>
 
-<button type="submit">申し込む</button>
-
+<button type="submit" id="submitButton" disabled>日程を読み込み中…</button>
+<p id="status" class="status" role="status"></p>
 </form>
 </div>
 
-<div class="card success" id="success">
+<div class="card success" id="successCard" hidden>
 <div style="font-size:48px">✓</div>
 <h2>応募を受け付けました</h2>
-<p>参加確定の詳細は公式LINEよりお送りします。<br>
-続けて公式LINEを登録してください。</p>
-<a class="line" href="#">公式LINEを登録する</a>
+<p id="successMessage">応募データを受け付けました。</p>
+<a class="line" id="lineLink" href="#" target="_blank" rel="noopener" hidden>公式LINEを登録する</a>
+<p class="caption">応募完了後、公式LINEの案内に従って連携してください。</p>
 </div>
 
+<iframe name="submissionFrame" id="submissionFrame" hidden></iframe>
 </div>
 
 <script>
-const dates=[
-["12/11（金）",11],
-["12/12（土）",11],
-["12/13（日）",11],
-["12/14（月）",11],
-["12/15（火）",11],
-["12/16（水）",11],
-["12/17（木）",11],
-["12/18（金）",11],
-["12/19（土）",13],
-["12/20（日）",13],
-["12/21（月）",11],
-["12/22（火）",11],
-["12/23（水・祝）",11],
-["12/24（木）",13],
-["12/25（金）",13]
-];
+const API_URL = 'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
 
-const days=document.getElementById("days");
+// 公式LINEのURLが分かったら、下の空文字にURLを設定
+const LINE_URL = '';
 
-dates.forEach(([d,cap])=>{
-const el=document.createElement("label");
-el.className="day";
-el.innerHTML=
-`<span>
-<input type="checkbox" name="dates" value="${d}">
-${d}
-</span>
-<small>募集枠 ${cap}名</small>`;
-days.appendChild(el);
-});
+const form = document.getElementById('form');
+const daysEl = document.getElementById('days');
+const button = document.getElementById('submitButton');
+const statusEl = document.getElementById('status');
+const formCard = document.getElementById('formCard');
+const successCard = document.getElementById('successCard');
+const frame = document.getElementById('submissionFrame');
 
-document.getElementById("form").addEventListener("submit",e=>{
-e.preventDefault();
+let availableLabels = [];
+let pendingToken = null;
+let pendingTimer = null;
 
-if(!document.querySelector('input[name="dates"]:checked')){
-alert("参加希望日を1つ以上選択してください");
-return;
+function loadDates() {
+  const callbackName = 'receiveDates_' + Math.random().toString(36).slice(2);
+  const script = document.createElement('script');
+  const timeout = setTimeout(() => {
+    cleanup();
+    daysEl.textContent = '日程を読み込めませんでした。ページを再読み込みしてください。';
+    button.disabled = true;
+    button.textContent = '日程を読み込めません';
+  }, 15000);
+
+  function cleanup() {
+    clearTimeout(timeout);
+    delete window[callbackName];
+    script.remove();
+  }
+
+  window[callbackName] = function(result) {
+    cleanup();
+
+    if (!result || !result.success || !Array.isArray(result.dates)) {
+      daysEl.textContent = '日程を読み込めませんでした。ページを再読み込みしてください。';
+      button.textContent = '日程を読み込めません';
+      return;
+    }
+
+    availableLabels = result.dates.map(d => d.label);
+    daysEl.innerHTML = '';
+
+    if (!result.dates.length) {
+      daysEl.textContent = '現在、受付可能な日程はありません。';
+      button.textContent = '受付終了';
+      return;
+    }
+
+    result.dates.forEach(d => {
+      const label = document.createElement('label');
+      label.className = 'day';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.name = 'dates';
+      checkbox.value = d.label;
+
+      const text = document.createElement('span');
+      text.appendChild(document.createTextNode(d.label));
+
+      const small = document.createElement('small');
+      small.textContent = '募集枠 ' + d.capacity + '名';
+
+      label.appendChild(checkbox);
+      label.appendChild(text);
+      label.appendChild(small);
+      daysEl.appendChild(label);
+    });
+
+    button.disabled = false;
+    button.textContent = '申し込む';
+  };
+
+  script.onerror = function() {
+    cleanup();
+    daysEl.textContent = '日程の取得に失敗しました。ページを再読み込みしてください。';
+    button.disabled = true;
+    button.textContent = '日程を読み込めません';
+  };
+
+  script.src = API_URL + '?action=dates&callback=' + callbackName;
+  document.head.appendChild(script);
 }
 
-document.getElementById("formCard").style.display="none";
-document.getElementById("success").style.display="block";
-});
-</script>
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
 
+  if (pendingToken) return;
+
+  const selectedDates = Array.from(
+    document.querySelectorAll('input[name="dates"]:checked')
+  ).map(el => el.value);
+
+  if (!selectedDates.length) {
+    statusEl.textContent = '参加希望日を1つ以上選択してください。';
+    return;
+  }
+
+  if (selectedDates.some(d => !availableLabels.includes(d))) {
+    statusEl.textContent = '受付状況が更新されています。ページを再読み込みして日程を選び直してください。';
+    return;
+  }
+
+  const token = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+  pendingToken = token;
+  button.disabled = true;
+  button.textContent = '送信中…';
+  statusEl.textContent = '応募を送信しています。画面を閉じないでください。';
+
+  const postForm = document.createElement('form');
+  postForm.method = 'POST';
+  postForm.action = API_URL;
+  postForm.target = 'submissionFrame';
+  postForm.style.display = 'none';
+
+  const values = {
+    name: document.getElementById('name').value.trim(),
+    grade: document.getElementById('grade').value,
+    email: document.getElementById('email').value.trim(),
+    emergency: document.getElementById('emergency').value.trim(),
+    dates: JSON.stringify(selectedDates),
+    responseToken: token
+  };
+
+  Object.entries(values).forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    postForm.appendChild(input);
+  });
+
+  document.body.appendChild(postForm);
+
+  pendingTimer = setTimeout(() => {
+    if (pendingToken === token) {
+      pendingToken = null;
+      button.disabled = false;
+      button.textContent = 'もう一度申し込む';
+      statusEl.textContent = '受付結果を確認できませんでした。二重応募を防ぐため、スプレッドシートに記録されているか確認してから再送信してください。';
+    }
+    postForm.remove();
+  }, 30000);
+
+  postForm.submit();
+  postForm.remove();
+});
+
+window.addEventListener('message', function(event) {
+  const data = event.data;
+
+  if (!data || data.source !== 'xmas-market-form') return;
+  if (!pendingToken || data.token !== pendingToken) return;
+
+  clearTimeout(pendingTimer);
+  pendingToken = null;
+
+  if (data.success) {
+    formCard.hidden = true;
+    successCard.hidden = false;
+    document.getElementById('successMessage').textContent = data.message;
+
+    if (LINE_URL) {
+      const link = document.getElementById('lineLink');
+      link.href = LINE_URL;
+      link.hidden = false;
+    }
+  } else {
+    button.disabled = false;
+    button.textContent = '申し込む';
+    statusEl.textContent = data.message || '応募に失敗しました。';
+    loadDates();
+  }
+});
+
+loadDates();
+</script>
 </body>
 </html>
