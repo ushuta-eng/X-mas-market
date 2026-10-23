@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>X-mas Market｜参加申込フォーム</title>
+
   <style>
     :root {
       --red: #b52e3b;
@@ -149,6 +150,7 @@
     .date-option input {
       width: 18px;
       height: 18px;
+      margin: 0;
       accent-color: var(--green);
       flex-shrink: 0;
     }
@@ -289,9 +291,7 @@
       <section class="card">
         <h2>参加希望日程</h2>
         <p class="hint">参加できる日程をすべて選択してください。</p>
-        <div id="dateList" aria-live="polite">
-          日程を読み込んでいます…
-        </div>
+        <div id="dateList" aria-live="polite">日程を読み込んでいます…</div>
         <p id="dateMessage" class="hint"></p>
       </section>
 
@@ -302,11 +302,11 @@
           収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、
           個人データを第三者に提供しません。
         </p>
+
         <div class="privacy">
           <label>
             <input id="privacyConsent" type="checkbox" required>
-            個人情報の取り扱いを確認し、同意します。
-            <span class="required">必須</span>
+            <span>個人情報の取り扱いを確認し、同意します。<span class="required">必須</span></span>
           </label>
         </div>
       </section>
@@ -329,7 +329,7 @@
   </main>
 
   <script>
-    // 必ず、Apps Script の最新の Web アプリ URL に合わせてください。
+    // 現在のGAS WebアプリURL
     const API_URL =
       'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
 
@@ -365,6 +365,7 @@
       submitButton.textContent = text;
     }
 
+    // GASから受付可能な日程を取得する
     function loadDates() {
       if (Date.now() >= DEADLINE.getTime()) {
         dateList.textContent = '受付期間は終了しました。';
@@ -378,9 +379,11 @@
         Math.floor(Math.random() * 100000);
 
       const script = document.createElement('script');
-      const timeout = setTimeout(() => {
+
+      const timeout = setTimeout(function() {
         cleanup();
-        dateList.textContent = '日程を取得できませんでした。ページを再読み込みしてください。';
+        dateList.textContent =
+          '日程を取得できませんでした。ページを再読み込みしてください。';
         setSubmitEnabled(false, '日程を取得できません');
       }, 15000);
 
@@ -400,6 +403,13 @@
           return;
         }
 
+        if (result.closed) {
+          dateList.textContent = '受付期間は終了しました。';
+          dateMessage.textContent = '';
+          setSubmitEnabled(false, '受付終了');
+          return;
+        }
+
         dateList.replaceChildren();
 
         if (result.dates.length === 0) {
@@ -409,13 +419,16 @@
           return;
         }
 
-        result.dates.forEach(item => {
+        result.dates.forEach(function(item) {
           const label = document.createElement('label');
           label.className = 'date-option';
 
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
           checkbox.name = 'selectedDates';
+
+          // 表示ラベルを送信値として使用する
+          // GAS側はこのラベルとISO日付の両方を受け付ける
           checkbox.value = item.label;
 
           const text = document.createElement('span');
@@ -445,6 +458,7 @@
       document.head.appendChild(script);
     }
 
+    // 応募送信
     form.addEventListener('submit', function(event) {
       event.preventDefault();
 
@@ -459,7 +473,9 @@
 
       const selectedDates = Array.from(
         form.querySelectorAll('input[name="selectedDates"]:checked')
-      ).map(input => input.value);
+      ).map(function(input) {
+        return input.value;
+      });
 
       if (selectedDates.length === 0) {
         showStatus('参加希望日程を1つ以上選択してください。', true);
@@ -467,6 +483,7 @@
       }
 
       sending = true;
+
       pendingToken = (
         window.crypto && crypto.randomUUID
           ? crypto.randomUUID()
@@ -481,7 +498,11 @@
         grade: document.getElementById('grade').value,
         email: document.getElementById('email').value.trim(),
         emergency: document.getElementById('emergency').value.trim(),
+
+        // 重要：日程をJSON配列の文字列として送信。
+        // GAS側でJSON.parseして配列に戻す。
         dates: JSON.stringify(selectedDates),
+
         responseToken: pendingToken
       };
 
@@ -492,17 +513,17 @@
       postForm.acceptCharset = 'UTF-8';
       postForm.style.display = 'none';
 
-      Object.entries(values).forEach(([key, value]) => {
+      Object.entries(values).forEach(function(entry) {
         const input = document.createElement('input');
         input.type = 'hidden';
-        input.name = key;
-        input.value = value;
+        input.name = entry[0];
+        input.value = entry[1];
         postForm.appendChild(input);
       });
 
       document.body.appendChild(postForm);
 
-      pendingTimer = setTimeout(() => {
+      pendingTimer = setTimeout(function() {
         if (!sending) return;
 
         sending = false;
@@ -519,6 +540,7 @@
       postForm.remove();
     });
 
+    // GASからiframe経由で届く結果を受け取る
     window.addEventListener('message', function(event) {
       const data = event.data;
 
@@ -535,13 +557,16 @@
           'お申し込みを受け付けました。ご入力いただいたメールアドレスをご確認ください。',
           false
         );
+
         form.reset();
         loadDates();
+
       } else {
         showStatus(
           data.message || '受付できませんでした。入力内容をご確認ください。',
           true
         );
+
         setSubmitEnabled(true, 'もう一度申し込む');
         loadDates();
       }
