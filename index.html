@@ -503,6 +503,44 @@
       font-weight: 900;
     }
 
+    .success-lead {
+      margin-bottom: 18px !important;
+      color: #3d4a41;
+    }
+
+    .line-guide {
+      margin-top: 18px;
+      padding: 15px 16px;
+      border: 1px solid #cfe3d7;
+      border-radius: 10px;
+      background: #eef6f1;
+      text-align: left;
+    }
+
+    .line-guide-title {
+      display: inline-block;
+      margin-bottom: 7px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: #155c43;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .line-guide-text {
+      margin: 0 !important;
+      color: #33443a;
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .line-guide-text strong {
+      color: #b32131;
+      font-weight: 800;
+    }
+
     .management-id {
       margin-top: 18px;
       padding: 11px;
@@ -696,7 +734,7 @@
               class="field-label"
               for="name"
             >
-              名前（カタカナ表記）
+              名前（カタカナ）
               <span class="required">必須</span>
             </label>
 
@@ -733,6 +771,12 @@
             >
               <option value="">
                 選択してください
+              </option>
+              <option value="高校生">
+                高校生
+              </option>
+              <option value="専門学生">
+                専門学生
               </option>
               <option value="大学1年">
                 大学1年
@@ -773,7 +817,7 @@
               type="text"
               id="school"
               name="school"
-              placeholder="〇〇大学"
+              placeholder="○○大学/○○学校/○○専門学校"
               autocomplete="organization"
               required
             >
@@ -883,7 +927,7 @@
             <textarea
               id="note"
               name="note"
-              placeholder="事前に伝えておきたいことなどがあればご記入ください。"
+              placeholder="自由にご記入ください"
             ></textarea>
 
           </div>
@@ -992,8 +1036,12 @@
 
           <p>
             大阪福島 ABCクリスマスマーケット2026への
-            お申し込みを受け付けました。<br>
-            ご登録いただいたメールアドレスをご確認ください。
+            お申し込みを受け付けました。
+          </p>
+
+          <p class="success-lead">
+            参加に関するご案内は公式LINEよりお送りします。<br>
+            下のボタンから公式LINEを友だち追加してください。
           </p>
 
           <a
@@ -1005,6 +1053,18 @@
           >
             公式LINEを友だち追加
           </a>
+
+          <div class="line-guide">
+            <div class="line-guide-title">
+              申し込み済みの方はこちら
+            </div>
+
+            <p class="line-guide-text">
+              公式LINEを友だち追加のうえ、トーク画面の
+              「申し込み済みの方はこちら」より
+              <strong>お名前</strong>と<strong>イベント名</strong>をご入力ください。
+            </p>
+          </div>
 
           <div
             id="managementId"
@@ -1333,7 +1393,7 @@
 
 
   /*************************************************
-   * 日程表示（満員は非表示・残数は表示しない）
+   * 日程表示（満員は非表示）
    *************************************************/
 
   function renderDates(
