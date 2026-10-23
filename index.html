@@ -396,8 +396,9 @@
       window[callbackName] = function(result) {
         cleanup();
 
-        if (!result || result.success !== true ||
-            !Array.isArray(result.dates)) {
+        // GASのレスポンスは success プロパティを含まないため、
+        // dates 配列があることを基準に判定する。
+        if (!result || !Array.isArray(result.dates)) {
           dateList.textContent = '日程の取得に失敗しました。';
           setSubmitEnabled(false, '日程を取得できません');
           return;
