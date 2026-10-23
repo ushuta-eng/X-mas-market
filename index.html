@@ -1,577 +1,1147 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#176b4b">
-  <title>神戸 TOTTEI ABCクリスマスマーケット2026｜参加申込フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>神戸 TOTTEI ABCクリスマスマーケット2026</title>
+
   <style>
-    :root {
-      --red: #b52e3b;
-      --green: #176b4b;
-      --cream: #fffaf1;
-      --ink: #26352e;
-      --muted: #68756d;
-      --line: #dce5dc;
+    * {
+      box-sizing: border-box;
     }
-    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      background: var(--cream);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "Noto Sans JP", sans-serif;
-      line-height: 1.7;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Noto Sans JP",
+        "Hiragino Kaku Gothic ProN",
+        "Yu Gothic",
+        sans-serif;
+      background: #f7f5ef;
+      color: #222;
     }
-    .hero {
-      padding: 34px 18px 28px;
-      text-align: center;
-      color: white;
-      background: var(--green);
-      border-bottom: 7px solid #d7aa56;
-    }
-    .hero .eyebrow {
-      margin: 0 0 7px;
-      font-size: 12px;
-      letter-spacing: .14em;
-    }
-    .hero h1 {
-      max-width: 650px;
+
+    .container {
+      max-width: 720px;
       margin: 0 auto;
-      font-size: clamp(25px, 5.5vw, 36px);
-      line-height: 1.4;
+      padding: 24px 16px 60px;
     }
-    .hero p { margin: 10px 0 0; font-size: 14px; }
-    main {
-      width: min(100% - 28px, 680px);
-      margin: 25px auto 45px;
-    }
-    .notice {
-      margin-bottom: 20px;
-      padding: 15px 17px;
-      border: 1px solid #ead9b8;
-      border-radius: 12px;
-      background: #fff5df;
-      font-size: 14px;
-    }
+
     .card {
-      margin-bottom: 18px;
-      padding: 21px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: white;
-      box-shadow: 0 4px 14px rgba(30, 60, 40, .04);
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 22px;
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.08);
     }
-    .card h2 { margin: 0 0 17px; font-size: 18px; }
-    .field { margin-bottom: 18px; }
-    .field:last-child { margin-bottom: 0; }
-    label, .field-title {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: 700;
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: 26px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .description {
+      margin-bottom: 28px;
+      line-height: 1.8;
       font-size: 14px;
     }
-    .required {
-      margin-left: 6px;
-      color: var(--red);
-      font-size: 11px;
+
+    .field {
+      margin-bottom: 22px;
     }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="date"],
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .required {
+      color: #d33;
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    input,
     select,
     textarea {
-      display: block;
       width: 100%;
-      min-height: 46px;
-      padding: 10px 12px;
-      border: 1px solid #cbd6cc;
-      border-radius: 9px;
-      background: white;
-      color: var(--ink);
-      font: inherit;
-    }
-    textarea { min-height: 110px; resize: vertical; }
-    input:focus, select:focus, textarea:focus {
-      outline: 2px solid #79b69a;
-      outline-offset: 1px;
-    }
-    .hint { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
-    #dateList {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 9px;
-      margin-top: 12px;
-    }
-    .date-option {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      min-height: 47px;
-      margin: 0;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .date-option:has(input:checked) {
-      border-color: var(--green);
-      background: #edf7f0;
-    }
-    .date-option input {
-      width: 18px;
-      height: 18px;
-      margin: 0;
-      accent-color: var(--green);
-      flex-shrink: 0;
-    }
-    .privacy { font-size: 13px; overflow-wrap: anywhere; }
-    .privacy label {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      font-weight: 500;
-    }
-    .privacy input { margin-top: 5px; flex-shrink: 0; }
-    button, .line-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 52px;
-      padding: 12px 18px;
-      border: 0;
-      border-radius: 11px;
-      background: var(--red);
-      color: white;
-      font: inherit;
+      padding: 13px 14px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
       font-size: 16px;
-      font-weight: 700;
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
+      font-family: inherit;
     }
-    button:disabled { opacity: .55; cursor: wait; }
-    #status {
-      display: none;
-      margin-top: 17px;
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .date-loading {
+      padding: 18px;
+      text-align: center;
+      border-radius: 10px;
+      background: #f3f3f3;
+      color: #666;
+    }
+
+    .date-error {
       padding: 16px;
       border-radius: 10px;
-      background: #edf7f0;
-      overflow-wrap: anywhere;
+      background: #fff0f0;
+      color: #c00;
+      line-height: 1.7;
     }
-    #status.error { background: #fff0ef; color: #91252c; }
-    #status h2 { margin: 0 0 5px; font-size: 18px; }
-    #status p { margin: 0 0 12px; }
-    #status .line-button { margin-top: 14px; background: #06c755; }
-    .footer {
-      padding: 18px 10px;
+
+    .date-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .date-item {
+      position: relative;
+    }
+
+    .date-item input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .date-item label {
+      margin: 0;
+      padding: 13px 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
       text-align: center;
-      color: var(--muted);
-      font-size: 12px;
+      cursor: pointer;
+      background: #fff;
+      font-weight: 500;
+      transition: 0.15s;
     }
-    @media (max-width: 420px) {
-      .card { padding: 17px; }
-      #dateList { grid-template-columns: 1fr; }
+
+    .date-item input:checked + label {
+      background: #222;
+      color: #fff;
+      border-color: #222;
+    }
+
+    .date-item.full label {
+      background: #eee;
+      color: #aaa;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+
+    .date-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .privacy {
+      margin-top: 25px;
+      padding: 16px;
+      background: #f7f7f7;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .privacy-check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-top: 14px;
+    }
+
+    .privacy-check input {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+    }
+
+    .submit-button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
+      background: #222;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 18px;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+      line-height: 1.7;
+    }
+
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      color: #c00;
+    }
+
+    .message.success {
+      display: block;
+      background: #eef9ef;
+      color: #176b27;
+    }
+
+    .line-link {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      background: #06c755;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 14px 10px 40px;
+      }
+
+      .card {
+        padding: 22px 16px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .date-list {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-<body>
-  <header class="hero">
-    <p class="eyebrow">CHRISTMAS MARKET 2026</p>
-    <h1>神戸 TOTTEI ABC<br>クリスマスマーケット2026</h1>
-    <p>参加申込フォーム</p>
-  </header>
 
-  <main>
-    <div class="notice">
-      <strong>応募締切：2026年11月23日（月・祝）23:59</strong><br>
-      先着順で受付します。定員に達した日程は選択肢に表示されません。
-      参加できる日程を複数選択できます。
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <h1>
+      神戸 TOTTEI ABC<br>
+      クリスマスマーケット2026
+    </h1>
+
+    <div class="description">
+      クリスマスマーケットの運営スタッフ応募フォームです。<br>
+      必要事項をご入力のうえ、お申し込みください。
     </div>
 
-    <form id="applicationForm">
-      <section class="card">
-        <h2>基本情報</h2>
 
-        <div class="field">
-          <label for="name">名前（カタカナ表記）<span class="required">必須</span></label>
-          <input id="name" name="name" type="text"
-            autocomplete="name" required maxlength="100"
-            placeholder="例：ヤマダ ハナコ">
-          <p class="hint">姓と名の間はスペースを入れてください。</p>
+    <!-- =========================
+         応募フォーム
+    ========================== -->
+
+    <form
+      id="applicationForm"
+      method="POST"
+      target="submitFrame"
+      action="https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec"
+    >
+
+      <!-- 名前 -->
+      <div class="field">
+
+        <label>
+          名前（カタカナ表記）
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="text"
+          name="name"
+          required
+          placeholder="ヤマダ タロウ"
+        >
+
+      </div>
+
+
+      <!-- 学年 -->
+      <div class="field">
+
+        <label>
+          学年
+          <span class="required">必須</span>
+        </label>
+
+        <select
+          name="grade"
+          required
+        >
+
+          <option value="">
+            選択してください
+          </option>
+
+          <option>高校1年</option>
+          <option>高校2年</option>
+          <option>高校3年</option>
+
+          <option>大学1年</option>
+          <option>大学2年</option>
+          <option>大学3年</option>
+          <option>大学4年</option>
+
+          <option>大学院1年</option>
+          <option>大学院2年</option>
+          <option>大学院3年</option>
+
+          <option>専門学校1年</option>
+          <option>専門学校2年</option>
+          <option>専門学校3年</option>
+          <option>専門学校4年</option>
+
+          <option>その他</option>
+
+        </select>
+
+      </div>
+
+
+      <!-- 学校名 -->
+      <div class="field">
+
+        <label>
+          学校名
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="text"
+          name="school"
+          required
+          placeholder="〇〇大学"
+        >
+
+      </div>
+
+
+      <!-- 生年月日 -->
+      <div class="field">
+
+        <label>
+          生年月日
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="date"
+          name="birthDate"
+          required
+        >
+
+      </div>
+
+
+      <!-- メール -->
+      <div class="field">
+
+        <label>
+          メールアドレス
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="example@example.com"
+        >
+
+      </div>
+
+
+      <!-- 緊急連絡先 -->
+      <div class="field">
+
+        <label>
+          緊急連絡先
+          <span class="required">必須</span>
+        </label>
+
+        <input
+          type="tel"
+          name="emergency"
+          required
+          placeholder="090-1234-5678"
+        >
+
+      </div>
+
+
+      <!-- =========================
+           希望日程
+      ========================== -->
+
+      <div class="field">
+
+        <label>
+          希望日程
+          <span class="required">必須</span>
+        </label>
+
+        <div
+          id="dateLoading"
+          class="date-loading"
+        >
+          日程を読み込んでいます…
         </div>
 
-        <div class="field">
-          <label for="grade">学年<span class="required">必須</span></label>
-          <select id="grade" name="grade" required>
-            <option value="">選択してください</option>
-            <optgroup label="高校">
-              <option>高校1年</option>
-              <option>高校2年</option>
-              <option>高校3年</option>
-            </optgroup>
-            <optgroup label="大学">
-              <option>大学1年</option>
-              <option>大学2年</option>
-              <option>大学3年</option>
-              <option>大学4年</option>
-            </optgroup>
-            <optgroup label="大学院">
-              <option>大学院1年</option>
-              <option>大学院2年</option>
-              <option>大学院3年</option>
-            </optgroup>
-            <optgroup label="専門学校">
-              <option>専門学校1年</option>
-              <option>専門学校2年</option>
-              <option>専門学校3年</option>
-              <option>専門学校4年</option>
-            </optgroup>
-            <option>その他</option>
-          </select>
+        <div
+          id="dateError"
+          class="date-error hidden"
+        ></div>
+
+        <div
+          id="dateList"
+          class="date-list hidden"
+        ></div>
+
+        <div class="date-note">
+          ※ 定員に達した日程は表示されません。<br>
+          ※ 先着順での受付となります。
         </div>
 
-        <div class="field">
-          <label for="school">学校名<span class="required">必須</span></label>
-          <input id="school" name="school" type="text"
-            required maxlength="150" autocomplete="organization"
-            placeholder="例：〇〇大学">
-        </div>
+      </div>
 
-        <div class="field">
-          <label for="birthDate">生年月日<span class="required">必須</span></label>
-          <input id="birthDate" name="birthDate" type="date" required
-            min="1900-01-01">
-        </div>
 
-        <div class="field">
-          <label for="email">メールアドレス<span class="required">必須</span></label>
-          <input id="email" name="email" type="email"
-            autocomplete="email" required maxlength="254"
-            placeholder="例：name@example.com">
-        </div>
+      <!-- 備考 -->
+      <div class="field">
 
-        <div class="field">
-          <label for="emergency">緊急連絡先<span class="required">必須</span></label>
-          <input id="emergency" name="emergency" type="tel"
-            autocomplete="tel" required maxlength="30"
-            placeholder="例：090-1234-5678">
-        </div>
-      </section>
+        <label>
+          備考
+        </label>
 
-      <section class="card">
-        <h2>参加希望日程</h2>
-        <p class="hint">参加できる日程をすべて選択してください。</p>
-        <div id="dateList" aria-live="polite">日程を読み込んでいます…</div>
-        <p id="dateMessage" class="hint"></p>
-      </section>
+        <textarea
+          name="note"
+          placeholder="質問や連絡事項があればご記入ください。"
+        ></textarea>
 
-      <section class="card">
-        <h2>備考</h2>
-        <div class="field">
-          <label for="note">連絡事項・質問など（任意）</label>
-          <textarea id="note" name="note" maxlength="2000"
-            placeholder="運営への連絡事項があれば入力してください。"></textarea>
-        </div>
-      </section>
+      </div>
 
-      <section class="card">
-        <h2>個人情報の取り扱い</h2>
-        <p class="privacy">
-          ご入力いただいた情報は、イベントの受付・連絡・緊急時の対応・運営のために利用します。
-          収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、
+
+      <!-- 個人情報 -->
+      <div class="privacy">
+
+        <strong>
+          個人情報の取り扱いについて
+        </strong>
+
+        <p>
+          収集した個人情報は、法令に基づく場合を除き、
+          あらかじめご本人の同意を得ることなく、
           個人データを第三者に提供しません。
         </p>
-        <div class="privacy">
-          <label>
-            <input id="privacyConsent" name="privacyConsent"
-              type="checkbox" value="同意済み" required>
-            <span>個人情報の取り扱いを確認し、同意します。<span class="required">必須</span></span>
-          </label>
-        </div>
-      </section>
 
-      <button id="submitButton" type="submit" disabled>
-        日程を読み込み中…
+        <p>
+          ご入力いただいた情報は、
+          イベント受付、各種連絡、緊急時の連絡、
+          その他イベント運営に必要な範囲で使用します。
+        </p>
+
+        <label class="privacy-check">
+
+          <input
+            type="checkbox"
+            name="privacy"
+            value="agree"
+            required
+          >
+
+          <span>
+            個人情報の取り扱いについて同意します。
+          </span>
+
+        </label>
+
+      </div>
+
+
+      <button
+        id="submitButton"
+        class="submit-button"
+        type="submit"
+      >
+        応募する
       </button>
-      <div id="status" role="status" aria-live="polite"></div>
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
     </form>
 
-    <iframe name="submissionFrame" id="submissionFrame"
-      title="応募送信処理" style="display:none"></iframe>
+  </div>
 
-    <div class="footer">神戸 TOTTEI ABCクリスマスマーケット2026</div>
-  </main>
+</div>
 
-  <script>
-    const API_URL =
-      'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
 
-    const LINE_URL = 'https://lin.ee/84dtwFC';
-    const DEADLINE = new Date('2026-11-24T00:00:00+09:00');
+<!-- =========================
+     hidden iframe
+========================== -->
 
-    const form = document.getElementById('applicationForm');
-    const dateList = document.getElementById('dateList');
-    const dateMessage = document.getElementById('dateMessage');
-    const submitButton = document.getElementById('submitButton');
-    const statusBox = document.getElementById('status');
+<iframe
+  name="submitFrame"
+  id="submitFrame"
+  style="display:none;"
+></iframe>
 
-    let pendingToken = '';
-    let pendingTimer = null;
-    let sending = false;
 
-    function showStatus(message, isError, isSuccess) {
-      statusBox.style.display = 'block';
-      statusBox.className = isError ? 'error' : '';
-      statusBox.replaceChildren();
+<script>
 
-      const heading = document.createElement('h2');
-      heading.textContent = isError
-        ? '確認してください'
-        : (isSuccess ? 'お申し込みを受け付けました' : 'お知らせ');
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
 
-      const paragraph = document.createElement('p');
-      paragraph.textContent = message;
-      statusBox.append(heading, paragraph);
+const LINE_URL =
+  'https://lin.ee/84dtwFC';
 
-      if (isSuccess) {
-        const lineLink = document.createElement('a');
-        lineLink.className = 'line-button';
-        lineLink.href = LINE_URL;
-        lineLink.target = '_blank';
-        lineLink.rel = 'noopener noreferrer';
-        lineLink.textContent = '公式LINEを友だち追加する';
-        statusBox.appendChild(lineLink);
+const DEADLINE =
+  new Date(
+    '2026-11-24T00:00:00+09:00'
+  );
 
-        const lineHint = document.createElement('p');
-        lineHint.style.marginTop = '12px';
-        lineHint.textContent =
-          '今後の連絡をご確認いただくため、公式LINEの友だち追加をお願いします。';
-        statusBox.appendChild(lineHint);
-      }
 
-      statusBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+/* =========================
+ * 日付表示
+ * ========================= */
+
+function formatDateLabel(dateString) {
+
+  const date =
+    new Date(
+      dateString + 'T00:00:00+09:00'
+    );
+
+  const month =
+    date.getMonth() + 1;
+
+  const day =
+    date.getDate();
+
+  const weekdays = [
+    '日',
+    '月',
+    '火',
+    '水',
+    '木',
+    '金',
+    '土'
+  ];
+
+  const weekday =
+    weekdays[
+      date.getDay()
+    ];
+
+  return (
+    month +
+    '月' +
+    day +
+    '日（' +
+    weekday +
+    '）'
+  );
+}
+
+
+/* =========================
+ * JSONP
+ *
+ * fetchではなくJSONPを使用
+ * ========================= */
+
+function loadDates() {
+
+  const callbackName =
+    'xmasDatesCallback_' +
+    Date.now();
+
+  const script =
+    document.createElement(
+      'script'
+    );
+
+  const timeout =
+    setTimeout(
+      function() {
+
+        cleanup();
+
+        showDateError(
+          '日程を読み込めませんでした。ページを再読み込みしてください。'
+        );
+
+      },
+      15000
+    );
+
+
+  function cleanup() {
+
+    clearTimeout(
+      timeout
+    );
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(
+        script
+      );
     }
 
-    function setSubmitEnabled(enabled, text) {
-      submitButton.disabled = !enabled;
-      submitButton.textContent = text;
+    try {
+      delete window[
+        callbackName
+      ];
+    } catch (e) {
+      window[
+        callbackName
+      ] = undefined;
     }
+  }
 
-    function loadDates() {
-      if (Date.now() >= DEADLINE.getTime()) {
-        dateList.textContent = '受付期間は終了しました。';
-        dateMessage.textContent = '';
-        setSubmitEnabled(false, '受付終了');
-        return;
-      }
 
-      const callbackName =
-        'xmasDatesCallback_' + Date.now() + '_' +
-        Math.floor(Math.random() * 100000);
+  window[
+    callbackName
+  ] = function(result) {
 
-      const script = document.createElement('script');
-      let finished = false;
+    cleanup();
 
-      const timeout = setTimeout(function() {
-        cleanup();
-        dateList.textContent =
-          '日程を取得できませんでした。ページを再読み込みしてください。';
-        setSubmitEnabled(false, '日程を取得できません');
-      }, 15000);
+    console.log(
+      '日程API response:',
+      result
+    );
 
-      function cleanup() {
-        if (finished) return;
-        finished = true;
-        clearTimeout(timeout);
-        delete window[callbackName];
-        script.remove();
-      }
+    if (
+      !result ||
+      !Array.isArray(
+        result.dates
+      )
+    ) {
 
-      window[callbackName] = function(result) {
-        cleanup();
-
-        // GASのレスポンスは success プロパティを含まないため、
-        // dates 配列があることを基準に判定する。
-        if (!result || !Array.isArray(result.dates)) {
-          dateList.textContent = '日程の取得に失敗しました。';
-          setSubmitEnabled(false, '日程を取得できません');
-          return;
-        }
-
-        if (result.closed) {
-          dateList.textContent = '受付期間は終了しました。';
-          dateMessage.textContent = '';
-          setSubmitEnabled(false, '受付終了');
-          return;
-        }
-
-        dateList.replaceChildren();
-
-        if (result.dates.length === 0) {
-          dateList.textContent = '現在、受付可能な日程はありません。';
-          dateMessage.textContent = '';
-          setSubmitEnabled(false, '受付できる日程がありません');
-          return;
-        }
-
-        result.dates.forEach(function(item) {
-          const label = document.createElement('label');
-          label.className = 'date-option';
-
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.name = 'selectedDates';
-          checkbox.value = item.label;
-
-          const text = document.createElement('span');
-          text.textContent = item.label;
-
-          label.append(checkbox, text);
-          dateList.appendChild(label);
-        });
-
-        dateMessage.textContent =
-          '※定員に達した日程は表示されません。';
-
-        setSubmitEnabled(true, '申し込む');
-      };
-
-      script.onerror = function() {
-        cleanup();
-        dateList.textContent = '日程を取得できませんでした。';
-        setSubmitEnabled(false, '日程を取得できません');
-      };
-
-      script.src = API_URL +
-        '?action=dates&callback=' + encodeURIComponent(callbackName) +
-        '&_=' + Date.now();
-
-      document.head.appendChild(script);
-    }
-
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      if (sending) return;
-
-      if (Date.now() >= DEADLINE.getTime()) {
-        showStatus('応募締切を過ぎています。', true, false);
-        return;
-      }
-
-      if (!form.reportValidity()) return;
-
-      const selectedDates = Array.from(
-        form.querySelectorAll('input[name="selectedDates"]:checked')
-      ).map(function(input) {
-        return input.value;
-      });
-
-      if (selectedDates.length === 0) {
-        showStatus('参加希望日程を1つ以上選択してください。', true, false);
-        return;
-      }
-
-      sending = true;
-      pendingToken = (
-        window.crypto && crypto.randomUUID
-          ? crypto.randomUUID()
-          : String(Date.now()) + '_' + Math.random().toString(36).slice(2)
+      showDateError(
+        '日程データを取得できませんでした。'
       );
 
-      statusBox.style.display = 'none';
-      setSubmitEnabled(false, '送信しています…');
+      return;
+    }
 
-      const values = {
-        name: document.getElementById('name').value.trim(),
-        grade: document.getElementById('grade').value,
-        school: document.getElementById('school').value.trim(),
-        birthDate: document.getElementById('birthDate').value,
-        email: document.getElementById('email').value.trim(),
-        emergency: document.getElementById('emergency').value.trim(),
-        dates: JSON.stringify(selectedDates),
-        note: document.getElementById('note').value.trim(),
-        privacyConsent: document.getElementById('privacyConsent').checked
-          ? '同意済み' : '',
-        responseToken: pendingToken
-      };
 
-      const postForm = document.createElement('form');
-      postForm.method = 'POST';
-      postForm.action = API_URL;
-      postForm.target = 'submissionFrame';
-      postForm.acceptCharset = 'UTF-8';
-      postForm.style.display = 'none';
+    if (
+      result.closed === true
+    ) {
 
-      Object.entries(values).forEach(function(entry) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = entry[0];
-        input.value = entry[1];
-        postForm.appendChild(input);
-      });
+      showDateError(
+        '応募受付は終了しました。'
+      );
 
-      document.body.appendChild(postForm);
+      return;
+    }
 
-      pendingTimer = setTimeout(function() {
-        if (!sending) return;
 
-        sending = false;
-        pendingToken = '';
-        setSubmitEnabled(true, 'もう一度申し込む');
+    renderDates(
+      result.dates
+    );
+  };
 
-        showStatus(
-          '受付結果を確認できませんでした。二重応募を防ぐため、再送信する前に応募者一覧への登録を確認してください。',
-          true,
-          false
+
+  script.src =
+    API_URL +
+    '?action=dates' +
+    '&callback=' +
+    encodeURIComponent(
+      callbackName
+    ) +
+    '&t=' +
+    Date.now();
+
+  script.onerror =
+    function() {
+
+      cleanup();
+
+      showDateError(
+        '日程情報の取得に失敗しました。'
+      );
+    };
+
+  document.body.appendChild(
+    script
+  );
+}
+
+
+/* =========================
+ * 日程表示
+ * ========================= */
+
+function renderDates(
+  dates
+) {
+
+  const loading =
+    document.getElementById(
+      'dateLoading'
+    );
+
+  const list =
+    document.getElementById(
+      'dateList'
+    );
+
+  const error =
+    document.getElementById(
+      'dateError'
+    );
+
+
+  loading.classList.add(
+    'hidden'
+  );
+
+  error.classList.add(
+    'hidden'
+  );
+
+  list.innerHTML = '';
+
+
+  /*
+   * 満員の日程は非表示
+   */
+  const availableDates =
+    dates.filter(
+      item =>
+        Number(
+          item.remaining
+        ) > 0
+    );
+
+
+  if (
+    availableDates.length === 0
+  ) {
+
+    showDateError(
+      '現在、選択できる日程がありません。'
+    );
+
+    return;
+  }
+
+
+  availableDates.forEach(
+    function(item, index) {
+
+      const wrapper =
+        document.createElement(
+          'div'
         );
-      }, 30000);
 
-      postForm.submit();
-      postForm.remove();
-    });
+      wrapper.className =
+        'date-item';
 
-    window.addEventListener('message', function(event) {
-      const data = event.data;
 
-      if (!data || data.source !== 'xmas-market-form') return;
-      if (!pendingToken || data.token !== pendingToken) return;
-
-      clearTimeout(pendingTimer);
-      pendingTimer = null;
-      sending = false;
-      pendingToken = '';
-
-      if (data.success === true) {
-        form.reset();
-        form.querySelectorAll('input[name="selectedDates"]')
-          .forEach(function(input) { input.checked = false; });
-
-        showStatus(
-          '受付が完了しました。ご入力いただいたメールアドレスをご確認ください。',
-          false,
-          true
+      const input =
+        document.createElement(
+          'input'
         );
 
-        loadDates();
-      } else {
-        showStatus(
-          data.message || '受付できませんでした。入力内容をご確認ください。',
-          true,
-          false
+      input.type =
+        'checkbox';
+
+      input.name =
+        'dates';
+
+      input.value =
+        item.date;
+
+      input.id =
+        'date_' + index;
+
+
+      const label =
+        document.createElement(
+          'label'
         );
-        setSubmitEnabled(true, 'もう一度申し込む');
-        loadDates();
-      }
-    });
+
+      label.htmlFor =
+        input.id;
+
+      label.textContent =
+        formatDateLabel(
+          item.date
+        );
+
+
+      wrapper.appendChild(
+        input
+      );
+
+      wrapper.appendChild(
+        label
+      );
+
+      list.appendChild(
+        wrapper
+      );
+
+    }
+  );
+
+
+  list.classList.remove(
+    'hidden'
+  );
+}
+
+
+/* =========================
+ * 日程エラー
+ * ========================= */
+
+function showDateError(
+  message
+) {
+
+  const loading =
+    document.getElementById(
+      'dateLoading'
+    );
+
+  const list =
+    document.getElementById(
+      'dateList'
+    );
+
+  const error =
+    document.getElementById(
+      'dateError'
+    );
+
+
+  loading.classList.add(
+    'hidden'
+  );
+
+  list.classList.add(
+    'hidden'
+  );
+
+  error.textContent =
+    message;
+
+  error.classList.remove(
+    'hidden'
+  );
+}
+
+
+/* =========================
+ * 応募送信
+ * ========================= */
+
+const form =
+  document.getElementById(
+    'applicationForm'
+  );
+
+const submitButton =
+  document.getElementById(
+    'submitButton'
+  );
+
+const message =
+  document.getElementById(
+    'message'
+  );
+
+
+form.addEventListener(
+  'submit',
+  function(event) {
+
+    event.preventDefault();
+
+
+    /*
+     * 日程チェック
+     */
+    const selectedDates =
+      Array.from(
+        document.querySelectorAll(
+          'input[name="dates"]:checked'
+        )
+      );
+
+
+    if (
+      selectedDates.length === 0
+    ) {
+
+      showMessage(
+        '希望日程を1つ以上選択してください。',
+        false
+      );
+
+      return;
+    }
+
+
+    /*
+     * 送信用のhidden inputを作る
+     *
+     * 同じname=datesを
+     * カンマ区切りでGASへ渡す
+     */
+    const existing =
+      form.querySelector(
+        'input[data-date-submit="true"]'
+      );
+
+    if (existing) {
+      existing.remove();
+    }
+
+
+    const hidden =
+      document.createElement(
+        'input'
+      );
+
+    hidden.type =
+      'hidden';
+
+    hidden.name =
+      'dates';
+
+    hidden.value =
+      selectedDates
+        .map(
+          input => input.value
+        )
+        .join(',');
+
+    hidden.dataset.dateSubmit =
+      'true';
+
+    form.appendChild(
+      hidden
+    );
+
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      '送信中…';
+
+
+    message.className =
+      'message';
+
+    message.style.display =
+      'none';
+
+
+    /*
+     * iframe送信
+     */
+    form.submit();
+
+
+    /*
+     * 結果待ち
+     */
+    window.xmasSubmitTimeout =
+      setTimeout(
+        function() {
+
+          submitButton.disabled =
+            false;
+
+          submitButton.textContent =
+            '応募する';
+
+          showMessage(
+            '受付結果を確認できませんでした。二重応募を防ぐため、再送信する前に応募者一覧への登録を確認してください。',
+            false
+          );
+
+        },
+        30000
+      );
+
+  }
+);
+
+
+/* =========================
+ * GASからの回答
+ * ========================= */
+
+window.addEventListener(
+  'message',
+  function(event) {
+
+    const data =
+      event.data;
+
+
+    if (
+      !data ||
+      data.source !==
+      'xmas-market-form'
+    ) {
+      return;
+    }
+
+
+    if (
+      window.xmasSubmitTimeout
+    ) {
+
+      clearTimeout(
+        window.xmasSubmitTimeout
+      );
+
+      window.xmasSubmitTimeout =
+        null;
+    }
+
+
+    if (
+      data.success === true
+    ) {
+
+      showSuccess();
+
+    } else {
+
+      submitButton.disabled =
+        false;
+
+      submitButton.textContent =
+        '応募する';
+
+      showMessage(
+        data.message ||
+        '応募処理に失敗しました。',
+        false
+      );
+    }
+
+  }
+);
+
+
+/* =========================
+ * 成功表示
+ * ========================= */
+
+function showSuccess() {
+
+  form.innerHTML = '';
+
+  const success =
+    document.createElement(
+      'div'
+    );
+
+  success.className =
+    'message success';
+
+  success.style.display =
+    'block';
+
+  success.innerHTML =
+    '<strong>応募を受け付けました。</strong><br>' +
+    'ご応募ありがとうございます。' +
+    '<br><br>' +
+    '今後の連絡は公式LINEをご確認ください。' +
+    '<br>' +
+    '<a class="line-link" href="' +
+    LINE_URL +
+    '" target="_blank" rel="noopener">' +
+    '公式LINEを追加する' +
+    '</a>';
+
+  form.appendChild(
+    success
+  );
+}
+
+
+/* =========================
+ * メッセージ
+ * ========================= */
+
+function showMessage(
+  text,
+  success
+) {
+
+  message.textContent =
+    text;
+
+  message.className =
+    success
+      ? 'message success'
+      : 'message error';
+
+  message.style.display =
+    'block';
+}
+
+
+/* =========================
+ * 初期処理
+ * ========================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function() {
 
     loadDates();
-  </script>
+
+  }
+);
+
+</script>
+
 </body>
 </html>
