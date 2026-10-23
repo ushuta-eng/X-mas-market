@@ -349,17 +349,6 @@
       font-weight: 800;
     }
 
-    .date-remaining {
-      margin-top: 2px;
-      color: #77766e;
-      font-size: 10px;
-    }
-
-    .date-option input:checked + label .date-remaining {
-      color: #155c43;
-      font-weight: 700;
-    }
-
     .date-error {
       padding: 15px;
       border-radius: 9px;
@@ -1344,7 +1333,7 @@
 
 
   /*************************************************
-   * 日程表示（満員は非表示）
+   * 日程表示（満員は非表示・残数は表示しない）
    *************************************************/
 
   function renderDates(
@@ -1416,26 +1405,8 @@
           item.label;
 
 
-        const remaining =
-          document.createElement(
-            'span'
-          );
-
-        remaining.className =
-          'date-remaining';
-
-        remaining.textContent =
-          '残り ' +
-          item.remaining +
-          '名';
-
-
         label.appendChild(
           main
-        );
-
-        label.appendChild(
-          remaining
         );
 
 
