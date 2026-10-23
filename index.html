@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>参加申込フォーム</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f2;color:#222;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",sans-serif}
+.container{max-width:560px;margin:auto;padding:20px 16px 48px}
+.card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 4px 20px #0000000d}
+h1{font-size:23px;margin:0 0 8px}
+.lead{color:#666;line-height:1.7;font-size:14px;margin:0 0 24px}
+label{display:block;font-weight:700;font-size:14px;margin:20px 0 8px}
+.required{color:#d33;font-size:11px;margin-left:5px}
+input,select{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;font-size:16px;background:#fff}
+.days{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.day{border:1px solid #ccc;border-radius:10px;padding:12px;cursor:pointer}
+.day input{width:auto;margin-right:8px}
+.day small{display:block;color:#777;margin:5px 0 0 24px}
+.notice{background:#f7f7f7;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:#555}
+.policy{height:130px;overflow:auto;border:1px solid #ddd;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;background:#fafafa}
+.consent{display:flex;gap:8px;align-items:flex-start;font-weight:400}
+.consent input{width:auto;margin-top:4px}
+button{width:100%;border:0;border-radius:12px;background:#222;color:#fff;padding:15px;font-size:16px;font-weight:700;margin-top:22px;cursor:pointer}
+.success{display:none;text-align:center}
+.success h2{font-size:24px}
+.line{display:block;background:#06c755;color:#fff;text-decoration:none;padding:15px;border-radius:12px;font-weight:700;margin-top:18px}
+.caption{font-size:11px;color:#777;margin-top:8px}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div class="card" id="formCard">
+<h1>参加申込フォーム</h1>
+<p class="lead">必要事項をご入力のうえ、お申し込みください。先着順で受付します。</p>
+
+<div class="notice">
+申込締切：2026年11月23日（月・祝）23:59<br>
+※通常日程は11名、12/19・20・24・25は13名まで受付します。
+</div>
+
+<form id="form">
+
+<label>名前<span class="required">必須</span></label>
+<input required name="name" placeholder="例：山田 太郎">
+
+<label>学年<span class="required">必須</span></label>
+<select required name="grade">
+<option value="">選択してください</option>
+<option>高校1年</option>
+<option>高校2年</option>
+<option>高校3年</option>
+<option>大学1年</option>
+<option>大学2年</option>
+<option>大学3年</option>
+<option>大学4年</option>
+<option>大学院1年</option>
+<option>大学院2年</option>
+<option>大学院3年</option>
+</select>
+
+<label>メールアドレス<span class="required">必須</span></label>
+<input required type="email" name="email" placeholder="example@example.com">
+
+<label>緊急連絡先<span class="required">必須</span></label>
+<input required type="tel" name="emergency" placeholder="090-0000-0000">
+
+<label>参加希望日<span class="required">必須・複数選択可</span></label>
+<div class="days" id="days"></div>
+
+<label>個人情報の取り扱い</label>
+
+<div class="policy">
+収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、個人データを第三者に提供しません。<br><br>
+取得した情報は、本イベントの受付・連絡・緊急時対応および運営に必要な範囲で利用します。
+</div>
+
+<label class="consent">
+<input type="checkbox" required>
+<span>個人情報の取り扱いに同意します。</span>
+</label>
+
+<button type="submit">申し込む</button>
+
+</form>
+</div>
+
+<div class="card success" id="success">
+<div style="font-size:48px">✓</div>
+<h2>応募を受け付けました</h2>
+<p>参加確定の詳細は公式LINEよりお送りします。<br>
+続けて公式LINEを登録してください。</p>
+<a class="line" href="#">公式LINEを登録する</a>
+</div>
+
+</div>
+
+<script>
+const dates=[
+["12/11（金）",11],
+["12/12（土）",11],
+["12/13（日）",11],
+["12/14（月）",11],
+["12/15（火）",11],
+["12/16（水）",11],
+["12/17（木）",11],
+["12/18（金）",11],
+["12/19（土）",13],
+["12/20（日）",13],
+["12/21（月）",11],
+["12/22（火）",11],
+["12/23（水・祝）",11],
+["12/24（木）",13],
+["12/25（金）",13]
+];
+
+const days=document.getElementById("days");
+
+dates.forEach(([d,cap])=>{
+const el=document.createElement("label");
+el.className="day";
+el.innerHTML=
+`<span>
+<input type="checkbox" name="dates" value="${d}">
+${d}
+</span>
+<small>募集枠 ${cap}名</small>`;
+days.appendChild(el);
+});
+
+document.getElementById("form").addEventListener("submit",e=>{
+e.preventDefault();
+
+if(!document.querySelector('input[name="dates"]:checked')){
+alert("参加希望日を1つ以上選択してください");
+return;
+}
+
+document.getElementById("formCard").style.display="none";
+document.getElementById("success").style.display="block";
+});
+</script>
+
+</body>
+</html>
