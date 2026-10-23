@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>神戸 TOTTEI ABCクリスマスマーケット2026｜参加申込</title>
+  <title>大阪福島 ABCクリスマスマーケット2026｜参加申込</title>
 
   <meta
     name="description"
-    content="神戸 TOTTEI ABCクリスマスマーケット2026の参加申込フォームです。"
+    content="大阪福島 ABCクリスマスマーケット2026の学生スタッフ参加申込フォームです。"
   >
 
   <style>
@@ -176,6 +176,15 @@
     .notice-text {
       margin: 0;
       font-size: 13px;
+    }
+
+    .notice.closed {
+      border-left-color: #155c43;
+      background: #eef6f1;
+    }
+
+    .notice.closed .notice-title {
+      color: #155c43;
     }
 
     /* =========================
@@ -376,6 +385,15 @@
       margin: 0 0 12px;
     }
 
+    .privacy-list {
+      margin: 0 0 12px;
+      padding-left: 18px;
+    }
+
+    .privacy-list li {
+      margin-bottom: 2px;
+    }
+
     .consent {
       display: flex;
       align-items: flex-start;
@@ -519,6 +537,24 @@
       font-weight: 700;
     }
 
+    .retry-button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 9px 16px;
+      border: 1px solid #b32131;
+      border-radius: 8px;
+      background: #fff;
+      color: #b32131;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .retry-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* =========================
        FOOTER
     ========================= */
@@ -583,7 +619,7 @@
       </span>
 
       <h1>
-        神戸 TOTTEI
+        大阪福島
         <br>
         ABCクリスマスマーケット
       </h1>
@@ -635,6 +671,22 @@
         </p>
       </div>
 
+      <div
+        id="closedNotice"
+        class="notice closed hidden"
+      >
+        <div class="notice-title">
+          受付終了
+        </div>
+
+        <p
+          id="closedNoticeText"
+          class="notice-text"
+        >
+          応募受付は終了しました。
+        </p>
+      </div>
+
       <div class="form-card">
 
         <!-- FORM -->
@@ -663,7 +715,7 @@
               type="text"
               id="name"
               name="name"
-              placeholder="ヤマダ タロウ"
+              placeholder="ヤマモト タロウ"
               autocomplete="name"
               required
               pattern="^[ァ-ヶー\s　]+$"
@@ -865,10 +917,15 @@
               </p>
 
               <p>
-                ご提供いただいた個人情報は、
-                本イベントの受付・連絡・緊急時の対応・
-                運営に必要な範囲で利用します。
+                ご提供いただいた個人情報は、以下の目的で利用します。
               </p>
+
+              <ul class="privacy-list">
+                <li>イベント受付</li>
+                <li>申込者への連絡</li>
+                <li>緊急時対応</li>
+                <li>イベント運営</li>
+              </ul>
 
               <label class="consent">
                 <input
@@ -893,7 +950,21 @@
           <div
             id="submitError"
             class="submit-error hidden"
-          ></div>
+            role="alert"
+            aria-live="assertive"
+          >
+            <span id="submitErrorText"></span>
+
+            <br>
+
+            <button
+              type="button"
+              id="retryCheckButton"
+              class="retry-button hidden"
+            >
+              結果を再確認
+            </button>
+          </div>
 
           <!-- SUBMIT -->
 
@@ -931,7 +1002,7 @@
           </h2>
 
           <p>
-            神戸 TOTTEI ABCクリスマスマーケット2026への
+            大阪福島 ABCクリスマスマーケット2026への
             お申し込みを受け付けました。<br>
             ご登録いただいたメールアドレスをご確認ください。
           </p>
@@ -959,7 +1030,7 @@
   </main>
 
   <footer>
-    神戸 TOTTEI ABCクリスマスマーケット2026
+    大阪福島 ABCクリスマスマーケット2026
   </footer>
 
 </div>
@@ -972,6 +1043,7 @@
 <iframe
   name="submitFrame"
   id="submitFrame"
+  title="送信結果"
   style="
     position:absolute;
     width:1px;
@@ -991,6 +1063,10 @@
 
   const API_URL =
     'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
+
+  /* 結果確認ポーリング設定 */
+  const POLL_INTERVAL_MS = 2500;
+  const POLL_MAX_ATTEMPTS = 16;
 
 
   /*************************************************
@@ -1027,6 +1103,16 @@
       'submitError'
     );
 
+  const submitErrorText =
+    document.getElementById(
+      'submitErrorText'
+    );
+
+  const retryCheckButton =
+    document.getElementById(
+      'retryCheckButton'
+    );
+
   const successSection =
     document.getElementById(
       'successSection'
@@ -1037,6 +1123,16 @@
       'managementId'
     );
 
+  const closedNotice =
+    document.getElementById(
+      'closedNotice'
+    );
+
+  const closedNoticeText =
+    document.getElementById(
+      'closedNoticeText'
+    );
+
 
   /*************************************************
    * 状態
@@ -1044,17 +1140,31 @@
 
   let submitting = false;
 
+  let settled = false;
+
   let datesLoaded = false;
+
+  let currentToken = '';
+
+  let pollTimer = null;
+
+  let pollAttempts = 0;
 
 
   /*************************************************
-   * 日程API読み込み
+   * 汎用 JSONP
    *************************************************/
 
-  function loadDates() {
+  function requestJsonp(
+    action,
+    params,
+    onSuccess,
+    onError,
+    timeoutMs
+  ) {
 
     const callbackName =
-      'xmasCallback_' +
+      'xmasCb_' +
       Date.now() +
       '_' +
       Math.floor(
@@ -1063,17 +1173,12 @@
 
     let finished = false;
 
-    function finish(result) {
-
-      if (finished) {
-        return;
-      }
-
-      finished = true;
-
-      dateLoading.classList.add(
-        'hidden'
+    const script =
+      document.createElement(
+        'script'
       );
+
+    function cleanup() {
 
       try {
         delete window[callbackName];
@@ -1082,64 +1187,53 @@
           undefined;
       }
 
-      console.log(
-        '[XMAS] 日程API:',
-        result
-      );
-
-      if (
-        !result ||
-        !Array.isArray(
-          result.dates
-        )
-      ) {
-
-        showDateError(
-          '日程データを取得できませんでした。ページを再読み込みしてください。'
+      if (script.parentNode) {
+        script.parentNode.removeChild(
+          script
         );
-
-        return;
       }
-
-      if (result.closed === true) {
-
-        showDateError(
-          '応募受付は終了しました。'
-        );
-
-        submitButton.disabled =
-          true;
-
-        return;
-      }
-
-      renderDates(
-        result.dates
-      );
     }
 
-
     window[callbackName] =
-      finish;
+      function(data) {
+
+        if (finished) {
+          return;
+        }
+
+        finished = true;
+
+        cleanup();
+
+        onSuccess(data);
+      };
 
 
-    const script =
-      document.createElement(
-        'script'
-      );
-
-    script.src =
-      API_URL +
-      '?action=dates' +
+    let query =
+      '?action=' +
+      encodeURIComponent(action) +
       '&callback=' +
-      encodeURIComponent(
-        callbackName
-      ) +
+      encodeURIComponent(callbackName) +
       '&_=' +
       Date.now();
 
-    script.async = true;
+    Object.keys(params || {}).forEach(
+      function(key) {
+        query +=
+          '&' +
+          encodeURIComponent(key) +
+          '=' +
+          encodeURIComponent(
+            params[key]
+          );
+      }
+    );
 
+
+    script.src =
+      API_URL + query;
+
+    script.async = true;
 
     script.onerror =
       function() {
@@ -1150,20 +1244,13 @@
 
         finished = true;
 
-        dateLoading.classList.add(
-          'hidden'
-        );
+        cleanup();
 
-        try {
-          delete window[callbackName];
-        } catch (error) {
-          window[callbackName] =
-            undefined;
+        if (onError) {
+          onError(
+            new Error('network')
+          );
         }
-
-        showDateError(
-          '日程データの読み込みに失敗しました。ページを再読み込みしてください。'
-        );
       };
 
 
@@ -1181,29 +1268,83 @@
 
         finished = true;
 
-        dateLoading.classList.add(
-          'hidden'
-        );
+        cleanup();
 
-        try {
-          delete window[callbackName];
-        } catch (error) {
-          window[callbackName] =
-            undefined;
+        if (onError) {
+          onError(
+            new Error('timeout')
+          );
         }
 
-        showDateError(
-          '日程データの読み込みに時間がかかっています。ページを再読み込みしてください。'
-        );
-
       },
-      15000
+      timeoutMs || 12000
     );
   }
 
 
   /*************************************************
-   * 日程表示
+   * 日程API読み込み
+   *************************************************/
+
+  function loadDates() {
+
+    requestJsonp(
+      'dates',
+      {},
+      function(result) {
+
+        dateLoading.classList.add(
+          'hidden'
+        );
+
+        console.log(
+          '[XMAS] 日程API:',
+          result
+        );
+
+        if (
+          !result ||
+          !Array.isArray(
+            result.dates
+          )
+        ) {
+
+          showDateError(
+            '日程データを取得できませんでした。ページを再読み込みしてください。'
+          );
+
+          return;
+        }
+
+        if (result.closed === true) {
+
+          showClosed(
+            '応募受付は終了しました。（締切：2026年11月23日 23:59）'
+          );
+
+          return;
+        }
+
+        renderDates(
+          result.dates
+        );
+      },
+      function() {
+
+        dateLoading.classList.add(
+          'hidden'
+        );
+
+        showDateError(
+          '日程データの読み込みに失敗しました。通信環境をご確認のうえ、ページを再読み込みしてください。'
+        );
+      }
+    );
+  }
+
+
+  /*************************************************
+   * 日程表示（満員は非表示）
    *************************************************/
 
   function renderDates(
@@ -1317,12 +1458,9 @@
 
     if (visibleCount === 0) {
 
-      showDateError(
+      showClosed(
         '現在、受付可能な日程がありません。'
       );
-
-      submitButton.disabled =
-        true;
 
       return;
     }
@@ -1338,7 +1476,7 @@
 
 
   /*************************************************
-   * 日程エラー
+   * 表示制御
    *************************************************/
 
   function showDateError(
@@ -1355,6 +1493,33 @@
     dateList.classList.add(
       'hidden'
     );
+  }
+
+
+  function showClosed(
+    message
+  ) {
+
+    dateLoading.classList.add(
+      'hidden'
+    );
+
+    dateList.classList.add(
+      'hidden'
+    );
+
+    closedNoticeText.textContent =
+      message;
+
+    closedNotice.classList.remove(
+      'hidden'
+    );
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      '受付を終了しました';
   }
 
 
@@ -1433,6 +1598,12 @@
       submitting =
         true;
 
+      settled =
+        false;
+
+      currentToken =
+        createSubmitToken();
+
       submitButton.disabled =
         true;
 
@@ -1462,22 +1633,21 @@
         'none';
 
 
-      /***********************************************
-       * FormData → hidden input
-       ***********************************************/
-
       const formData =
         new FormData(form);
-
 
       formData.delete(
         'dateChoice'
       );
 
-
       formData.set(
         'dates',
         selectedDates.join(', ')
+      );
+
+      formData.set(
+        'token',
+        currentToken
       );
 
 
@@ -1525,6 +1695,9 @@
           error
         );
 
+        submitting =
+          false;
+
         resetSubmitButton();
 
         showSubmitError(
@@ -1535,16 +1708,253 @@
           postForm.remove();
         } catch (removeError) {}
 
+        return;
       }
 
+
+      setTimeout(
+        function() {
+
+          try {
+            postForm.remove();
+          } catch (error) {}
+
+        },
+        2000
+      );
+
+
+      /***********************************************
+       * 結果確認（postMessage が届かない場合の保険）
+       ***********************************************/
+
+      startPolling();
+    }
+  );
+
+
+  function createSubmitToken() {
+
+    return (
+      'xm-' +
+      Date.now().toString(36) +
+      '-' +
+      Math.random()
+        .toString(36)
+        .slice(2, 10)
+    );
+  }
+
+
+  /*************************************************
+   * 結果ポーリング
+   *************************************************/
+
+  function startPolling() {
+
+    stopPolling();
+
+    pollAttempts =
+      0;
+
+    pollTimer =
+      setInterval(
+        function() {
+
+          pollAttempts++;
+
+          checkStatus();
+
+          if (
+            pollAttempts >=
+            POLL_MAX_ATTEMPTS
+          ) {
+
+            stopPolling();
+
+            handleTimeout();
+          }
+
+        },
+        POLL_INTERVAL_MS
+      );
+  }
+
+
+  function stopPolling() {
+
+    if (pollTimer) {
+
+      clearInterval(
+        pollTimer
+      );
+
+      pollTimer =
+        null;
+    }
+  }
+
+
+  function checkStatus() {
+
+    if (
+      !currentToken ||
+      settled ||
+      !submitting
+    ) {
+      return;
+    }
+
+    requestJsonp(
+      'status',
+      {
+        token: currentToken
+      },
+      function(result) {
+
+        if (
+          !result ||
+          settled ||
+          !submitting
+        ) {
+          return;
+        }
+
+        if (result.pending === true) {
+          return;
+        }
+
+        stopPolling();
+
+        settled =
+          true;
+
+        if (result.success) {
+
+          handleSuccess(
+            result
+          );
+
+        } else {
+
+          handleFailure(
+            result.message ||
+            '送信に失敗しました。'
+          );
+        }
+      },
+      function() {
+        /* 通信エラーは次のポーリングで再試行 */
+      },
+      8000
+    );
+  }
+
+
+  function handleTimeout() {
+
+    if (settled) {
+      return;
+    }
+
+    submitting =
+      false;
+
+    resetSubmitButton();
+
+    showSubmitError(
+      '送信結果の確認に時間がかかっています。' +
+      '通信環境をご確認のうえ、下の「結果を再確認」を押してください。' +
+      '（二重登録を防ぐため、自動での再送信は行いません。）'
+    );
+
+    retryCheckButton.classList.remove(
+      'hidden'
+    );
+  }
+
+
+  retryCheckButton.addEventListener(
+    'click',
+    function() {
+
+      if (!currentToken) {
+        return;
+      }
+
+      retryCheckButton.disabled =
+        true;
+
+      retryCheckButton.textContent =
+        '確認しています…';
+
+      requestJsonp(
+        'status',
+        {
+          token: currentToken
+        },
+        function(result) {
+
+          retryCheckButton.disabled =
+            false;
+
+          retryCheckButton.textContent =
+            '結果を再確認';
+
+          if (!result || result.pending === true) {
+
+            showSubmitError(
+              'まだ受付結果を確認できません。少し時間をおいて、もう一度お試しください。'
+            );
+
+            retryCheckButton.classList.remove(
+              'hidden'
+            );
+
+            return;
+          }
+
+          settled =
+            true;
+
+          if (result.success) {
+
+            handleSuccess(
+              result
+            );
+
+          } else {
+
+            handleFailure(
+              result.message ||
+              '送信に失敗しました。'
+            );
+          }
+        },
+        function() {
+
+          retryCheckButton.disabled =
+            false;
+
+          retryCheckButton.textContent =
+            '結果を再確認';
+
+          showSubmitError(
+            '結果の確認に失敗しました。通信環境をご確認のうえ、もう一度お試しください。'
+          );
+
+          retryCheckButton.classList.remove(
+            'hidden'
+          );
+        },
+        12000
+      );
     }
   );
 
 
   /*************************************************
-   * GAS → GitHub Pages
-   *
-   * postMessage受信
+   * GAS → GitHub Pages（postMessage）
    *************************************************/
 
   window.addEventListener(
@@ -1570,6 +1980,16 @@
       );
 
 
+      if (settled) {
+        return;
+      }
+
+      settled =
+        true;
+
+      stopPolling();
+
+
       if (data.success) {
 
         handleSuccess(
@@ -1578,18 +1998,11 @@
 
       } else {
 
-        submitting =
-          false;
-
-        resetSubmitButton();
-
-        showSubmitError(
+        handleFailure(
           data.message ||
           '送信に失敗しました。'
         );
-
       }
-
     }
   );
 
@@ -1605,6 +2018,11 @@
     submitting =
       false;
 
+    settled =
+      true;
+
+    stopPolling();
+
 
     form.classList.add(
       'hidden'
@@ -1616,22 +2034,21 @@
     );
 
 
-    if (
+    const id =
+      data.managementId ||
       data.token ||
-      data.responseToken
-    ) {
+      data.responseToken ||
+      '';
+
+    if (id) {
 
       managementId.textContent =
-        '受付番号：' +
-        (
-          data.token ||
-          data.responseToken
-        );
+        '管理ID：' +
+        id;
 
       managementId.classList.remove(
         'hidden'
       );
-
     }
 
 
@@ -1643,14 +2060,29 @@
 
 
   /*************************************************
-   * エラー表示
+   * 失敗処理
    *************************************************/
+
+  function handleFailure(
+    message
+  ) {
+
+    submitting =
+      false;
+
+    resetSubmitButton();
+
+    showSubmitError(
+      message
+    );
+  }
+
 
   function showSubmitError(
     message
   ) {
 
-    submitError.textContent =
+    submitErrorText.textContent =
       message;
 
     submitError.classList.remove(
@@ -1670,8 +2102,12 @@
       'hidden'
     );
 
-    submitError.textContent =
+    submitErrorText.textContent =
       '';
+
+    retryCheckButton.classList.add(
+      'hidden'
+    );
   }
 
 
