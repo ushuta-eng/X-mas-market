@@ -1,279 +1,553 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>参加申込フォーム</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f5f5f2;color:#222;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",sans-serif}
-.container{max-width:560px;margin:auto;padding:20px 16px 48px}
-.card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 4px 20px #0000000d}
-h1{font-size:23px;margin:0 0 8px}
-.lead{color:#666;line-height:1.7;font-size:14px;margin:0 0 24px}
-label{display:block;font-weight:700;font-size:14px;margin:20px 0 8px}
-.required{color:#d33;font-size:11px;margin-left:5px}
-input,select{width:100%;padding:13px;border:1px solid #ccc;border-radius:10px;font-size:16px;background:#fff}
-.days{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.day{border:1px solid #ccc;border-radius:10px;padding:12px;margin:0;font-weight:400;cursor:pointer}
-.day input{width:auto;margin-right:8px}
-.day small{display:block;color:#777;margin:5px 0 0 24px}
-.notice{background:#f7f7f7;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:#555}
-.policy{height:130px;overflow:auto;border:1px solid #ddd;border-radius:10px;padding:12px;font-size:12px;line-height:1.7;background:#fafafa}
-.consent{display:flex;gap:8px;align-items:flex-start;font-weight:400}
-.consent input{width:auto;margin-top:4px}
-button{width:100%;border:0;border-radius:12px;background:#222;color:#fff;padding:15px;font-size:16px;font-weight:700;margin-top:22px;cursor:pointer}
-button:disabled{opacity:.55;cursor:wait}
-.status{font-size:14px;line-height:1.7;margin-top:16px;white-space:pre-line}
-.success{text-align:center}
-.line{display:block;background:#06c755;color:#fff;text-decoration:none;padding:15px;border-radius:12px;font-weight:700;margin-top:18px}
-.caption{font-size:11px;color:#777;margin-top:8px}
-[hidden]{display:none!important}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X-mas Market｜参加申込フォーム</title>
+  <style>
+    :root {
+      --red: #b52e3b;
+      --green: #176b4b;
+      --cream: #fffaf1;
+      --ink: #26352e;
+      --muted: #68756d;
+      --line: #dce5dc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "Noto Sans JP", sans-serif;
+      line-height: 1.7;
+    }
+
+    .hero {
+      padding: 34px 18px 28px;
+      text-align: center;
+      color: white;
+      background: var(--green);
+      border-bottom: 7px solid #d7aa56;
+    }
+
+    .hero .eyebrow {
+      margin: 0 0 7px;
+      font-size: 12px;
+      letter-spacing: .18em;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(27px, 6vw, 38px);
+      line-height: 1.35;
+    }
+
+    .hero p {
+      margin: 10px 0 0;
+      font-size: 14px;
+    }
+
+    main {
+      width: min(100% - 28px, 680px);
+      margin: 25px auto 45px;
+    }
+
+    .notice {
+      margin-bottom: 20px;
+      padding: 15px 17px;
+      border: 1px solid #ead9b8;
+      border-radius: 12px;
+      background: #fff5df;
+      font-size: 14px;
+    }
+
+    .card {
+      margin-bottom: 18px;
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 4px 14px rgba(30, 60, 40, .04);
+    }
+
+    .card h2 {
+      margin: 0 0 17px;
+      font-size: 18px;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label, .field-title {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .required {
+      margin-left: 6px;
+      color: var(--red);
+      font-size: 11px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      display: block;
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid #cbd6cc;
+      border-radius: 9px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid #79b69a;
+      outline-offset: 1px;
+    }
+
+    .hint {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #dateList {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .date-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 47px;
+      margin: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .date-option:has(input:checked) {
+      border-color: var(--green);
+      background: #edf7f0;
+    }
+
+    .date-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--green);
+      flex-shrink: 0;
+    }
+
+    .privacy {
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .privacy label {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-weight: 500;
+    }
+
+    .privacy input {
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    button {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--red);
+      color: white;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    #status {
+      display: none;
+      margin-top: 17px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #edf7f0;
+      overflow-wrap: anywhere;
+    }
+
+    #status.error {
+      background: #fff0ef;
+      color: #91252c;
+    }
+
+    #status h2 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    #status p { margin: 0; }
+
+    .footer {
+      padding: 18px 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 420px) {
+      .card { padding: 17px; }
+      #dateList { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-<div class="card" id="formCard">
-<h1>参加申込フォーム</h1>
-<p class="lead">必要事項をご入力のうえ、お申し込みください。先着順で受付します。</p>
+  <header class="hero">
+    <p class="eyebrow">CHRISTMAS MARKET 2026</p>
+    <h1>参加申込フォーム</h1>
+    <p>あなたのご応募をお待ちしています。</p>
+  </header>
 
-<div class="notice">
-申込締切：2026年11月23日（月・祝）23:59<br>
-※通常日程は11名、12/19・20・24・25は13名まで受付します。
-</div>
+  <main>
+    <div class="notice">
+      <strong>応募締切：2026年11月23日（月・祝）23:59</strong><br>
+      先着順で受付します。定員に達した日程は選択肢から表示されなくなります。
+      複数の日程を選択できます。
+    </div>
 
-<form id="form">
-<label for="name">名前<span class="required">必須</span></label>
-<input required id="name" name="name" placeholder="例：山田 太郎">
+    <form id="applicationForm">
+      <section class="card">
+        <h2>基本情報</h2>
 
-<label for="grade">学年<span class="required">必須</span></label>
-<select required id="grade" name="grade">
-<option value="">選択してください</option>
-<option>高校1年</option><option>高校2年</option><option>高校3年</option>
-<option>大学1年</option><option>大学2年</option><option>大学3年</option>
-<option>大学4年</option><option>大学院1年</option><option>大学院2年</option><option>大学院3年</option>
-</select>
+        <div class="field">
+          <label for="name">名前<span class="required">必須</span></label>
+          <input id="name" name="name" type="text"
+            autocomplete="name" required maxlength="100"
+            placeholder="例：山田 花子">
+        </div>
 
-<label for="email">メールアドレス<span class="required">必須</span></label>
-<input required type="email" id="email" name="email" placeholder="example@example.com">
+        <div class="field">
+          <label for="grade">学年<span class="required">必須</span></label>
+          <select id="grade" name="grade" required>
+            <option value="">選択してください</option>
+            <optgroup label="高校">
+              <option>高校1年</option>
+              <option>高校2年</option>
+              <option>高校3年</option>
+            </optgroup>
+            <optgroup label="大学">
+              <option>大学1年</option>
+              <option>大学2年</option>
+              <option>大学3年</option>
+              <option>大学4年</option>
+            </optgroup>
+            <optgroup label="大学院">
+              <option>大学院1年</option>
+              <option>大学院2年</option>
+              <option>大学院3年</option>
+            </optgroup>
+          </select>
+        </div>
 
-<label for="emergency">緊急連絡先<span class="required">必須</span></label>
-<input required type="tel" id="emergency" name="emergency" placeholder="090-0000-0000">
+        <div class="field">
+          <label for="email">メールアドレス<span class="required">必須</span></label>
+          <input id="email" name="email" type="email"
+            autocomplete="email" required maxlength="254"
+            placeholder="例：name@example.com">
+        </div>
 
-<label>参加希望日<span class="required">必須・複数選択可</span></label>
-<div class="days" id="days">日程を読み込んでいます…</div>
+        <div class="field">
+          <label for="emergency">緊急連絡先<span class="required">必須</span></label>
+          <input id="emergency" name="emergency" type="tel"
+            autocomplete="tel" required maxlength="30"
+            placeholder="例：090-1234-5678">
+        </div>
+      </section>
 
-<label>個人情報の取り扱い</label>
-<div class="policy">
-収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、個人データを第三者に提供しません。<br><br>
-取得した情報は、本イベントの受付・連絡・緊急時対応および運営に必要な範囲で利用します。
-</div>
+      <section class="card">
+        <h2>参加希望日程</h2>
+        <p class="hint">参加できる日程をすべて選択してください。</p>
+        <div id="dateList" aria-live="polite">
+          日程を読み込んでいます…
+        </div>
+        <p id="dateMessage" class="hint"></p>
+      </section>
 
-<label class="consent">
-<input type="checkbox" id="consent" required>
-<span>個人情報の取り扱いに同意します。</span>
-</label>
+      <section class="card">
+        <h2>個人情報の取り扱い</h2>
+        <p class="privacy">
+          ご入力いただいた情報は、イベントの受付・連絡・緊急時の対応・運営のために利用します。
+          収集した個人情報は、法令に基づく場合を除き、あらかじめご本人の同意を得ることなく、
+          個人データを第三者に提供しません。
+        </p>
+        <div class="privacy">
+          <label>
+            <input id="privacyConsent" type="checkbox" required>
+            個人情報の取り扱いを確認し、同意します。
+            <span class="required">必須</span>
+          </label>
+        </div>
+      </section>
 
-<button type="submit" id="submitButton" disabled>日程を読み込み中…</button>
-<p id="status" class="status" role="status"></p>
-</form>
-</div>
+      <button id="submitButton" type="submit" disabled>
+        日程を読み込み中…
+      </button>
 
-<div class="card success" id="successCard" hidden>
-<div style="font-size:48px">✓</div>
-<h2>応募を受け付けました</h2>
-<p id="successMessage">応募データを受け付けました。</p>
-<a class="line" id="lineLink" href="#" target="_blank" rel="noopener" hidden>公式LINEを登録する</a>
-<p class="caption">応募完了後、公式LINEの案内に従って連携してください。</p>
-</div>
+      <div id="status" role="status" aria-live="polite"></div>
+    </form>
 
-<iframe name="submissionFrame" id="submissionFrame" hidden></iframe>
-</div>
+    <iframe
+      name="submissionFrame"
+      id="submissionFrame"
+      title="応募送信処理"
+      style="display:none"
+    ></iframe>
 
-<script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
+    <div class="footer">X-mas Market 2026</div>
+  </main>
 
-// 公式LINEのURLが分かったら、下の空文字にURLを設定
-const LINE_URL = '';
+  <script>
+    // 必ず、Apps Script の最新の Web アプリ URL に合わせてください。
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbyGAKlINKbinXF4dDU58Vux93WOtUsQUQ-_8AMPsw27_u83f4HMrpKrbZY7MgGKo4wgiw/exec';
 
-const form = document.getElementById('form');
-const daysEl = document.getElementById('days');
-const button = document.getElementById('submitButton');
-const statusEl = document.getElementById('status');
-const formCard = document.getElementById('formCard');
-const successCard = document.getElementById('successCard');
-const frame = document.getElementById('submissionFrame');
+    const DEADLINE = new Date('2026-11-24T00:00:00+09:00');
 
-let availableLabels = [];
-let pendingToken = null;
-let pendingTimer = null;
+    const form = document.getElementById('applicationForm');
+    const dateList = document.getElementById('dateList');
+    const dateMessage = document.getElementById('dateMessage');
+    const submitButton = document.getElementById('submitButton');
+    const statusBox = document.getElementById('status');
 
-function loadDates() {
-  const callbackName = 'receiveDates_' + Math.random().toString(36).slice(2);
-  const script = document.createElement('script');
-  const timeout = setTimeout(() => {
-    cleanup();
-    daysEl.textContent = '日程を読み込めませんでした。ページを再読み込みしてください。';
-    button.disabled = true;
-    button.textContent = '日程を読み込めません';
-  }, 15000);
+    let pendingToken = '';
+    let pendingTimer = null;
+    let sending = false;
 
-  function cleanup() {
-    clearTimeout(timeout);
-    delete window[callbackName];
-    script.remove();
-  }
+    function showStatus(message, isError) {
+      statusBox.style.display = 'block';
+      statusBox.className = isError ? 'error' : '';
+      statusBox.replaceChildren();
 
-  window[callbackName] = function(result) {
-    cleanup();
+      const heading = document.createElement('h2');
+      heading.textContent = isError ? '確認してください' : '受付完了';
 
-    if (!result || !result.success || !Array.isArray(result.dates)) {
-      daysEl.textContent = '日程を読み込めませんでした。ページを再読み込みしてください。';
-      button.textContent = '日程を読み込めません';
-      return;
+      const paragraph = document.createElement('p');
+      paragraph.textContent = message;
+
+      statusBox.append(heading, paragraph);
+      statusBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    availableLabels = result.dates.map(d => d.label);
-    daysEl.innerHTML = '';
-
-    if (!result.dates.length) {
-      daysEl.textContent = '現在、受付可能な日程はありません。';
-      button.textContent = '受付終了';
-      return;
+    function setSubmitEnabled(enabled, text) {
+      submitButton.disabled = !enabled;
+      submitButton.textContent = text;
     }
 
-    result.dates.forEach(d => {
-      const label = document.createElement('label');
-      label.className = 'day';
+    function loadDates() {
+      if (Date.now() >= DEADLINE.getTime()) {
+        dateList.textContent = '受付期間は終了しました。';
+        dateMessage.textContent = '';
+        setSubmitEnabled(false, '受付終了');
+        return;
+      }
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.name = 'dates';
-      checkbox.value = d.label;
+      const callbackName =
+        'xmasDatesCallback_' + Date.now() + '_' +
+        Math.floor(Math.random() * 100000);
 
-      const text = document.createElement('span');
-      text.appendChild(document.createTextNode(d.label));
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => {
+        cleanup();
+        dateList.textContent = '日程を取得できませんでした。ページを再読み込みしてください。';
+        setSubmitEnabled(false, '日程を取得できません');
+      }, 15000);
 
-      const small = document.createElement('small');
-      small.textContent = '募集枠 ' + d.capacity + '名';
+      function cleanup() {
+        clearTimeout(timeout);
+        delete window[callbackName];
+        script.remove();
+      }
 
-      label.appendChild(checkbox);
-      label.appendChild(text);
-      label.appendChild(small);
-      daysEl.appendChild(label);
+      window[callbackName] = function(result) {
+        cleanup();
+
+        if (!result || result.success !== true ||
+            !Array.isArray(result.dates)) {
+          dateList.textContent = '日程の取得に失敗しました。';
+          setSubmitEnabled(false, '日程を取得できません');
+          return;
+        }
+
+        dateList.replaceChildren();
+
+        if (result.dates.length === 0) {
+          dateList.textContent = '現在、受付可能な日程はありません。';
+          dateMessage.textContent = '';
+          setSubmitEnabled(false, '受付できる日程がありません');
+          return;
+        }
+
+        result.dates.forEach(item => {
+          const label = document.createElement('label');
+          label.className = 'date-option';
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = 'selectedDates';
+          checkbox.value = item.label;
+
+          const text = document.createElement('span');
+          text.textContent = item.label;
+
+          label.append(checkbox, text);
+          dateList.append(label);
+        });
+
+        dateMessage.textContent =
+          '※定員に達した日程は表示されません。';
+
+        setSubmitEnabled(true, '申し込む');
+      };
+
+      script.onerror = function() {
+        cleanup();
+        dateList.textContent = '日程を取得できませんでした。';
+        setSubmitEnabled(false, '日程を取得できません');
+      };
+
+      script.src = API_URL +
+        '?action=dates&callback=' +
+        encodeURIComponent(callbackName) +
+        '&_=' + Date.now();
+
+      document.head.appendChild(script);
+    }
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (sending) return;
+
+      if (Date.now() >= DEADLINE.getTime()) {
+        showStatus('応募締切を過ぎています。', true);
+        return;
+      }
+
+      if (!form.reportValidity()) return;
+
+      const selectedDates = Array.from(
+        form.querySelectorAll('input[name="selectedDates"]:checked')
+      ).map(input => input.value);
+
+      if (selectedDates.length === 0) {
+        showStatus('参加希望日程を1つ以上選択してください。', true);
+        return;
+      }
+
+      sending = true;
+      pendingToken = (
+        window.crypto && crypto.randomUUID
+          ? crypto.randomUUID()
+          : String(Date.now()) + '_' + Math.random().toString(36).slice(2)
+      );
+
+      statusBox.style.display = 'none';
+      setSubmitEnabled(false, '送信しています…');
+
+      const values = {
+        name: document.getElementById('name').value.trim(),
+        grade: document.getElementById('grade').value,
+        email: document.getElementById('email').value.trim(),
+        emergency: document.getElementById('emergency').value.trim(),
+        dates: JSON.stringify(selectedDates),
+        responseToken: pendingToken
+      };
+
+      const postForm = document.createElement('form');
+      postForm.method = 'POST';
+      postForm.action = API_URL;
+      postForm.target = 'submissionFrame';
+      postForm.acceptCharset = 'UTF-8';
+      postForm.style.display = 'none';
+
+      Object.entries(values).forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        postForm.appendChild(input);
+      });
+
+      document.body.appendChild(postForm);
+
+      pendingTimer = setTimeout(() => {
+        if (!sending) return;
+
+        sending = false;
+        pendingToken = '';
+        setSubmitEnabled(true, 'もう一度申し込む');
+
+        showStatus(
+          '受付結果を確認できませんでした。二重応募を防ぐため、再送信する前に応募者一覧に登録されているか確認してください。',
+          true
+        );
+      }, 30000);
+
+      postForm.submit();
+      postForm.remove();
     });
 
-    button.disabled = false;
-    button.textContent = '申し込む';
-  };
+    window.addEventListener('message', function(event) {
+      const data = event.data;
 
-  script.onerror = function() {
-    cleanup();
-    daysEl.textContent = '日程の取得に失敗しました。ページを再読み込みしてください。';
-    button.disabled = true;
-    button.textContent = '日程を読み込めません';
-  };
+      if (!data || data.source !== 'xmas-market-form') return;
+      if (!pendingToken || data.token !== pendingToken) return;
 
-  script.src = API_URL + '?action=dates&callback=' + callbackName;
-  document.head.appendChild(script);
-}
+      clearTimeout(pendingTimer);
+      pendingTimer = null;
+      sending = false;
+      pendingToken = '';
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
+      if (data.success === true) {
+        showStatus(
+          'お申し込みを受け付けました。ご入力いただいたメールアドレスをご確認ください。',
+          false
+        );
+        form.reset();
+        loadDates();
+      } else {
+        showStatus(
+          data.message || '受付できませんでした。入力内容をご確認ください。',
+          true
+        );
+        setSubmitEnabled(true, 'もう一度申し込む');
+        loadDates();
+      }
+    });
 
-  if (pendingToken) return;
-
-  const selectedDates = Array.from(
-    document.querySelectorAll('input[name="dates"]:checked')
-  ).map(el => el.value);
-
-  if (!selectedDates.length) {
-    statusEl.textContent = '参加希望日を1つ以上選択してください。';
-    return;
-  }
-
-  if (selectedDates.some(d => !availableLabels.includes(d))) {
-    statusEl.textContent = '受付状況が更新されています。ページを再読み込みして日程を選び直してください。';
-    return;
-  }
-
-  const token = (window.crypto && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : Date.now().toString(36) + Math.random().toString(36).slice(2);
-
-  pendingToken = token;
-  button.disabled = true;
-  button.textContent = '送信中…';
-  statusEl.textContent = '応募を送信しています。画面を閉じないでください。';
-
-  const postForm = document.createElement('form');
-  postForm.method = 'POST';
-  postForm.action = API_URL;
-  postForm.target = 'submissionFrame';
-  postForm.style.display = 'none';
-
-  const values = {
-    name: document.getElementById('name').value.trim(),
-    grade: document.getElementById('grade').value,
-    email: document.getElementById('email').value.trim(),
-    emergency: document.getElementById('emergency').value.trim(),
-    dates: JSON.stringify(selectedDates),
-    responseToken: token
-  };
-
-  Object.entries(values).forEach(([name, value]) => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    postForm.appendChild(input);
-  });
-
-  document.body.appendChild(postForm);
-
-  pendingTimer = setTimeout(() => {
-    if (pendingToken === token) {
-      pendingToken = null;
-      button.disabled = false;
-      button.textContent = 'もう一度申し込む';
-      statusEl.textContent = '受付結果を確認できませんでした。二重応募を防ぐため、スプレッドシートに記録されているか確認してから再送信してください。';
-    }
-    postForm.remove();
-  }, 30000);
-
-  postForm.submit();
-  postForm.remove();
-});
-
-window.addEventListener('message', function(event) {
-  const data = event.data;
-
-  if (!data || data.source !== 'xmas-market-form') return;
-  if (!pendingToken || data.token !== pendingToken) return;
-
-  clearTimeout(pendingTimer);
-  pendingToken = null;
-
-  if (data.success) {
-    formCard.hidden = true;
-    successCard.hidden = false;
-    document.getElementById('successMessage').textContent = data.message;
-
-    if (LINE_URL) {
-      const link = document.getElementById('lineLink');
-      link.href = LINE_URL;
-      link.hidden = false;
-    }
-  } else {
-    button.disabled = false;
-    button.textContent = '申し込む';
-    statusEl.textContent = data.message || '応募に失敗しました。';
     loadDates();
-  }
-});
-
-loadDates();
-</script>
+  </script>
 </body>
 </html>
